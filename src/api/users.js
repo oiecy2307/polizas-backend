@@ -87,7 +87,7 @@ export default () => {
 				.catch((err) => {
 					console.log('ERROR', err);
 					res.status(500).send(err);
-				})
+				});
 
 		});
 
@@ -114,7 +114,7 @@ export default () => {
 					transaction.rollback();
 				});
 
-		})
+		});
 
 	// UPDATE AN USER
 	userRouter.route('/:id')
@@ -154,4 +154,4 @@ export default () => {
 		});
 
 	return userRouter;
-}
+};

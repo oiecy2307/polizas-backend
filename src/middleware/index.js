@@ -6,4 +6,4 @@ export default ({ config, db }) => {
 	// add middleware here
 
 	return routes;
-}
+};
