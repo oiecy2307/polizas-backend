@@ -4,6 +4,7 @@ import { datastore } from '../lib/util';
 export default () => {
 	const userRouter = express.Router();
 
+
 	// GET ALL USERS
 	userRouter.route('/')
 		.get((req, res) => {
@@ -49,7 +50,7 @@ export default () => {
 						const user = results[0];
 						res.status(200).send(user);
 					})
-					.catch(err => {
+					.catch((err) => {
 						console.error('ERROR:', err);
 						res.status(500).send(err);
 					});
@@ -101,9 +102,9 @@ export default () => {
 			transaction
 				.run()
 				.then(() => transaction.delete(userKey))
-				.then(() => {
-					return transaction.commit();
-				})
+				.then(() =>
+					transaction.commit()
+				)
 				.then((result) => {
 					console.log('resultresultresult', result);
 					res.status(200).send({ message: 'User deleted' });
