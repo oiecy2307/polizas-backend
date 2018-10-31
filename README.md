@@ -1,57 +1,18 @@
-Express & ES6 REST API Boilerplate
+BOILERPLATE FOR EXPRESS API
 ==================================
 
-This is a straightforward boilerplate for building REST APIs with ES6 and Express.
+This boilerplate is based on Express & ES6 REST API Boilerplate.
+It has some security topics added that are mentioned in this blog:
+https://medium.com/@nodepractices/were-under-attack-23-node-js-security-best-practices-e33c146cb87d
 
 - ES6 support via [babel](https://babeljs.io)
 - REST resources as middleware via [resource-router-middleware](https://github.com/developit/resource-router-middleware)
 - CORS support via [cors](https://github.com/troygoode/node-cors)
 - Body Parsing via [body-parser](https://github.com/expressjs/body-parser)
 
-> Tip: If you are using [Mongoose](https://github.com/Automattic/mongoose), you can automatically expose your Models as REST resources using [restful-mongoose](https://git.io/restful-mongoose).
-
-
-
-Getting Started
----------------
-
-```sh
-# clone it
-git clone git@github.com:developit/express-es6-rest-api.git
-cd express-es6-rest-api
-
-# Make it your own
-rm -rf .git && git init && npm init
-
-# Install dependencies
-npm install
-
-# Start development live-reload server
-PORT=8080 npm run dev
-
-# Start production server:
-PORT=8080 npm start
-```
-Docker Support
-------
-```sh
-cd express-es6-rest-api
-
-# Build your docker
-docker build -t es6/api-service .
-#            ^      ^           ^
-#          tag  tag name      Dockerfile location
-
-# run your docker
-docker run -p 8080:8080 es6/api-service
-#                 ^            ^
-#          bind the port    container tag
-#          to your host
-#          machine port   
-
-```
-
-License
--------
-
-MIT
+NOTES:
+- When running in local machine: export GOOGLE_APPLICATION_CREDENTIALS="./cuenta-servicio.json" is needed
+- run: "nsp check" to check for npm vulnerabilities
+- USE JSONSCHEMA FOR VALIDATE INCOMING JSONS
+- USE VALIDATOR INSTEAD OF REGEXES
+- Read this guide of 40 advices of node best practices https://github.com/i0natan/nodebestpractices/tree/security-best-practices-section#-65-collection-of-common-generic-security-best-practices-15-items

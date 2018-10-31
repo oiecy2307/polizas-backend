@@ -1,6 +1,6 @@
 {
-  "name": "express-es6-rest-api",
-  "version": "0.3.0",
+  "name": "express-api",
+  "version": "1.0.0",
   "description": "Starter project for an ES6 RESTful Express API",
   "main": "dist",
   "scripts": {
@@ -55,8 +55,7 @@
       "prefer-template": 2
     }
   },
-  "repository": "developit/express-es6-rest-api",
-  "author": "Jason Miller <jason@developit.ca>",
+  "author": "Pedro Medina",
   "license": "MIT",
   "dependencies": {
     "@google-cloud/datastore": "^2.0.0",
@@ -65,7 +64,10 @@
     "cors": "^2.7.1",
     "express": "^4.13.3",
     "express-rate-limit": "^3.3.0",
-    "morgan": "^1.8.0"
+    "helmet": "^3.14.0",
+    "jsonschema": "^1.2.4",
+    "morgan": "^1.8.0",
+    "validator": "^10.8.0"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",

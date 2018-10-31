@@ -8,6 +8,7 @@ import middleware from './middleware';
 import api from './api';
 import config from './config.json';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 
 let app = express();
 app.server = http.createServer(app);
@@ -19,6 +20,8 @@ const limiter = rateLimit({
 });
 //  apply to all requests
 app.use(limiter);
+
+app.use(helmet());
 
 // logger
 app.use(morgan('dev'));
