@@ -7,24 +7,33 @@ import initializeDb from './db';
 import middleware from './middleware';
 import api from './api';
 import config from './config.json';
+import rateLimit from 'express-rate-limit';
 
 let app = express();
 app.server = http.createServer(app);
+
+app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+//  apply to all requests
+app.use(limiter);
 
 // logger
 app.use(morgan('dev'));
 
 // 3rd party middleware
 app.use(cors({
-	exposedHeaders: config.corsHeaders
+	exposedHeaders: config.corsHeaders,
 }));
 
 app.use(bodyParser.json({
-	limit : config.bodyLimit
+	limit : config.bodyLimit,
 }));
 
 // connect to db
-initializeDb( db => {
+initializeDb((db) => {
 
 	// internal middleware
 	app.use(middleware({ config, db }));
