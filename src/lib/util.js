@@ -18,11 +18,3 @@ export function toRes(res, status=200) {
 		res.status(status).json(thing);
 	};
 }
-
-const Datastore = require('@google-cloud/datastore');
-
-const projectId = 'datastore-example-219517';
-
-export const datastore = new Datastore({
-  projectId: projectId,
-});

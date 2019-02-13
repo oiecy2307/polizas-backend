@@ -40,10 +40,28 @@ var _config = require('./config.json');
 
 var _config2 = _interopRequireDefault(_config);
 
+var _expressRateLimit = require('express-rate-limit');
+
+var _expressRateLimit2 = _interopRequireDefault(_expressRateLimit);
+
+var _helmet = require('helmet');
+
+var _helmet2 = _interopRequireDefault(_helmet);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
 app.server = _http2.default.createServer(app);
+
+app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+var limiter = (0, _expressRateLimit2.default)({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100 // limit each IP to 100 requests per windowMs
+});
+//  apply to all requests
+app.use(limiter);
+
+app.use((0, _helmet2.default)());
 
 // logger
 app.use((0, _morgan2.default)('dev'));
@@ -56,6 +74,12 @@ app.use((0, _cors2.default)({
 app.use(_bodyParser2.default.json({
 	limit: _config2.default.bodyLimit
 }));
+
+app.get('/connect', function (req, res) {
+	console.log(req);
+	console.log(req.body);
+	res.send('HOLA');
+});
 
 // connect to db
 (0, _db2.default)(function (db) {

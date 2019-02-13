@@ -9,6 +9,7 @@ import api from './api';
 import config from './config.json';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import Sequelize from 'sequelize';
 
 let app = express();
 app.server = http.createServer(app);
@@ -35,18 +36,48 @@ app.use(bodyParser.json({
 	limit : config.bodyLimit,
 }));
 
-// connect to db
-initializeDb((db) => {
+app.server.listen(process.env.PORT || config.port, () => {
+  console.log(`Started on port ${app.server.address().port}`);
+});
 
-	// internal middleware
-	app.use(middleware({ config, db }));
+app.get('/get-databases', (req, res) => {
+  const sequelize = new Sequelize('master', 'sa', '123', {
+		host: 'localhost',
+		dialect: 'mssql',
+		operatorsAliases: false,
+		port: 50827,
 
-	// api router
-	app.use('/api', api({ config, db }));
-
-	app.server.listen(process.env.PORT || config.port, () => {
-		console.log(`Started on port ${app.server.address().port}`);
+		pool: {
+			max: 5,
+			min: 0,
+			acquire: 30000,
+			idle: 10000,
+		},
 	});
+
+	sequelize
+  .authenticate()
+  .then(() => {
+    sequelize.query("select * from sys.databases WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb', 'ADD_Catalogos') and name like 'ad_%';").spread((results) => {
+      // Results will be an empty array and metadata will contain the number of affected rows.
+      res.status(200).json(results);
+      sequelize.close();
+    });
+  })
+  .catch((err) => {
+    res.status(500).send('Unable to connect to the database:', err);
+  });
+})
+
+app.get('/connect/:database', (req, res) => {
+  // connect to db
+  initializeDb(req.params.database, (db) => {
+    // internal middleware
+    app.use(middleware({ config, db }));
+    // api router
+    app.use('/api', api({ config, db }));
+  });
+  res.status(200).send('Good');
 });
 
 export default app;
