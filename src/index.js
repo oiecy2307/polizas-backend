@@ -10,6 +10,7 @@ import config from './config.json';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import Sequelize from 'sequelize';
+import path from 'path';
 
 let app = express();
 app.server = http.createServer(app);
@@ -36,8 +37,24 @@ app.use(bodyParser.json({
 	limit : config.bodyLimit,
 }));
 
+app.use(express.static(`${__dirname}/builds`));
+app.use(express.static(`${__dirname}/public`));
+app.use(express.static(`${__dirname}/css`));
+
 app.server.listen(process.env.PORT || config.port, () => {
   console.log(`Started on port ${app.server.address().port}`);
+  console.log(`${__dirname}/builds/home.min.js`);
+
+});
+
+console.log(`${__dirname}/public/index.html`);
+
+app.get('/', (req, res) => {
+  res.status(200).render(path.join(`${__dirname}/public/index.html`));
+});
+
+app.get('/a', (req, res) => {
+  res.status(200).sendFile(path.join(`${__dirname}/builds/home.min.js`));
 });
 
 app.get('/get-databases', (req, res) => {
