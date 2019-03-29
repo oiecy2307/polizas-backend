@@ -1,12 +1,12 @@
 import express from 'express';
 
-export default (sequelize, Producto, Presupuesto, ItemPresupuesto, ItemGananciaEstimada, ItemCantidadEstimada) => {
+export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio) => {
 	const router = express.Router();
 
-	// GET ALL PRODUCTS
-	router.route('/')
+	// Métodos get all
+	router.route('/vehiculos')
 		.get((req, res) => {
-      Producto.findAll()
+      Vehiculo.findAll()
       .then((products) => {
         res.status(200).json(products);
       })
@@ -15,21 +15,73 @@ export default (sequelize, Producto, Presupuesto, ItemPresupuesto, ItemGananciaE
       });
 		});
 
+	router.route('/servicios')
+		.get((req, res) => {
+      Servicio.findAll()
+      .then((servicios) => {
+        res.status(200).json(servicios);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+		});
+
+	router.route('/clientes')
+		.get((req, res) => {
+      Cliente.findAll()
+      .then((clientes) => {
+        res.status(200).json(clientes);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+		});
+
+	router.route('/pedidos')
+		.get((req, res) => {
+			Pedido.findAll()
+			.then((pedidos) => {
+				res.status(200).json(pedidos);
+			})
+			.catch((err) => {
+				res.status(500).send(err);
+			});
+		});
+
+	router.route('/registroservicios')
+		.get((req, res) => {
+			RegistroServicio.findAll()
+			.then((registros) => {
+				res.status(200).json(registros);
+			})
+			.catch((err) => {
+				res.status(500).send(err);
+			});
+		});
+
+
+
+
+
+
+
+
+
 	// GET PRESUPUESTO
 	router.route('/presupuesto')
 		.get((req, res) => {
-			Presupuesto.findAll({
+			Servicio.findAll({
 				include: [{
-					model: ItemPresupuesto,
+					model: Cliente,
 					include: [
 						{
-							model: Producto,
+							model: Vehiculo,
 						},
 						{
-							model: ItemGananciaEstimada,
+							model: Pedido,
 						},
 						{
-							model: ItemCantidadEstimada,
+							model: RegistroServicio,
 						},
 					],
 				}],
@@ -56,7 +108,7 @@ export default (sequelize, Producto, Presupuesto, ItemPresupuesto, ItemGananciaE
 					res.status(400).json({ error: 'Faltan parámetros' });
 					return;
 				}
-				const presupuesto = Presupuesto.build({
+				const presupuesto = Servicio.build({
 					periodo,
 					gananciaPresupuestadaTotal,
 					cantidadPresupuestadaTotal,
@@ -89,15 +141,15 @@ export default (sequelize, Producto, Presupuesto, ItemPresupuesto, ItemGananciaE
 					res.status(400).json({ error: 'Faltan parámetros' });
 					return;
 				}
-				const itemPresupuesto = ItemPresupuesto.build({
+				const itemPresupuesto = Cliente.build({
 					presupuestoid: presupuestoId,
 					CIDPRODUCTO: productoId,
 				});
 
 				itemPresupuesto
 					.save()
-					.then((newItemPresupuesto) => {
-						res.status(200).json(newItemPresupuesto);
+					.then((newCliente) => {
+						res.status(200).json(newCliente);
 					})
 					.catch((e) => {
 						res.status(500).send(e);
@@ -121,7 +173,7 @@ export default (sequelize, Producto, Presupuesto, ItemPresupuesto, ItemGananciaE
 					res.status(400).json({ error: 'Faltan parámetros' });
 					return;
 				}
-				const itemGanancia = ItemGananciaEstimada.build({
+				const itemGanancia = Pedido.build({
 					cantidad,
 					periodo,
 					presupuestoitemid,
@@ -154,7 +206,7 @@ export default (sequelize, Producto, Presupuesto, ItemPresupuesto, ItemGananciaE
 						res.status(400).json({ error: 'Faltan parámetros' });
 						return;
 					}
-					const itemCantidad = ItemCantidadEstimada.build({
+					const itemCantidad = RegistroServicio.build({
 						cantidad,
 						periodo,
 						presupuestoitemid,

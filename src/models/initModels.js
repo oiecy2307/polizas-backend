@@ -1,128 +1,103 @@
 const Sequelize = require('sequelize');
 export default (sequelize) => {
-  const presupuestoModel = sequelize.define('presupuestos', {
-    presupuestoid: {
+  const vehiculoModel = sequelize.define('vehiculos', {
+    id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
-    },
-    periodo: {
-      type: Sequelize.STRING,
-    },
-    gananciaPresupuestadaTotal: {
-      type: Sequelize.FLOAT,
-      defaultValue: 0,
-    },
-    cantidadPresupuestadaTotal: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0,
-    },
-    anio: {
-      type: Sequelize.INTEGER,
-      defaultValue: new Date().getFullYear(),
     },
     nombre: {
       type: Sequelize.STRING,
     },
   }, { timestamps: false });
 
-  const productoModel = sequelize.define('admProductos', {
-    CIDPRODUCTO: {
+  const servicioModel = sequelize.define('servicios', {
+    id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
-    CNOMBREPRODUCTO: {
+    nombre: {
       type: Sequelize.STRING,
     },
-    CTIPOPRODUCTO: {
+  }, { timestamps: false });
+
+  const clienteModel = sequelize.define('clientes', {
+    id: {
       type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    CDESCRIPCIONPRODUCTO: {
+    nombre: {
       type: Sequelize.STRING,
     },
-    CPRECIO1: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO2: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO3: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO4: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO5: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO6: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO7: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO8: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO9: {
-      type: Sequelize.FLOAT,
-    },
-    CPRECIO10: {
-      type: Sequelize.FLOAT,
-    },
   }, { timestamps: false });
 
-  const itemPresupuestoModel = sequelize.define('itemPresupuestos', {
-    presupuestoitemid: {
+  const pedidoModel = sequelize.define('pedidos', {
+    id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
+    fecha: {
+      type: Sequelize.DATE,
+      defaultValue: new Date(),
+    },
+    placa: {
+      type: Sequelize.STRING,
+    },
+    factura: {
+      type: Sequelize.STRING,
+    },
+    folio: {
+      type: Sequelize.STRING,
+    },
+    manoObraTotal: {
+      type: Sequelize.DECIMAL(10, 2),
+    },
+    total: {
+      type: Sequelize.DECIMAL(10, 2),
+    },
   }, { timestamps: false });
 
-  const itemGananciaEstimadaModel = sequelize.define('itemGanancias', {
-    itemgananciaid: {
+  const registroServicioModel = sequelize.define('registroservicio', {
+    id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    periodo: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0,
+    numeroParte: {
+      type: Sequelize.STRING,
     },
-    cantidad: {
-      type: Sequelize.FLOAT,
+    manoObra: {
+      type: Sequelize.DECIMAL(10, 2),
     },
-  }, { timestamps: false });
-
-  const itemCantidadEstimadaModel = sequelize.define('itemCantidadUnidades', {
-    itemcantidadunidades: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    periodo: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0,
-    },
-    cantidad: {
-      type: Sequelize.FLOAT,
+    precio: {
+      type: Sequelize.DECIMAL(10, 2),
     },
   }, { timestamps: false });
 
-  presupuestoModel.hasMany(itemPresupuestoModel, { foreignKey: 'presupuestoid' });
-  itemPresupuestoModel.belongsTo(presupuestoModel, { foreignKey: 'presupuestoid' });
-  itemPresupuestoModel.belongsTo(productoModel, { foreignKey: 'CIDPRODUCTO' });
-  itemPresupuestoModel.hasMany(itemGananciaEstimadaModel, { foreignKey: 'presupuestoitemid' });
-  itemPresupuestoModel.hasMany(itemCantidadEstimadaModel, { foreignKey: 'presupuestoitemid' });
-  itemGananciaEstimadaModel.belongsTo(itemPresupuestoModel, { foreignKey: 'presupuestoitemid' });
-  itemCantidadEstimadaModel.belongsTo(itemPresupuestoModel, { foreignKey: 'presupuestoitemid' });
+  // clienteModel.belongsTo(pedidoModel, { foreignKey: 'idCliente' });
+  clienteModel.hasMany(pedidoModel, { foreignKey: 'id' });
+  pedidoModel.hasOne(clienteModel, { foreignKey: 'id' });
+
+  vehiculoModel.belongsTo(pedidoModel, { foreignKey: 'id' });
+  pedidoModel.hasOne(vehiculoModel, { foreignKey: 'id' });
+
+  registroServicioModel.belongsTo(pedidoModel, { foreignKey: 'id' });
+  pedidoModel.hasMany(registroServicioModel, { foreignKey: 'id' });
+
+  vehiculoModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
+  registroServicioModel.hasOne(vehiculoModel, { foreignKey: 'id' });
+
+  servicioModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
+  registroServicioModel.hasMany(servicioModel, { foreignKey: 'id' });
 
   return {
-    presupuestoModel,
-    productoModel,
-    itemPresupuestoModel,
-    itemGananciaEstimadaModel,
-    itemCantidadEstimadaModel,
+    vehiculoModel,
+    servicioModel,
+    clienteModel,
+    pedidoModel,
+    registroServicioModel,
   };
 }

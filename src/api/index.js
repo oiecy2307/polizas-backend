@@ -1,25 +1,28 @@
 import { version } from '../../package.json';
 import { Router } from 'express';
-import users from './users';
-import presupuesto from './presupuesto';
+import pedidos from './pedidos';
 import initModels from '../models/initModels';
 
 export default ({ config, db }) => {
 	let api = Router();
 	const {
-		presupuestoModel,
-    productoModel,
-    itemPresupuestoModel,
-		itemGananciaEstimadaModel,
-		itemCantidadEstimadaModel,
+		vehiculoModel,
+    servicioModel,
+    clienteModel,
+    pedidoModel,
+    registroServicioModel,
 	} = initModels(db);
 
-	const presupuestoApi = presupuesto(db, productoModel, presupuestoModel, itemPresupuestoModel, itemGananciaEstimadaModel, itemCantidadEstimadaModel);
+	const pedidosApi = pedidos(
+		db,
+		vehiculoModel,
+    servicioModel,
+    clienteModel,
+    pedidoModel,
+    registroServicioModel
+	);
 
-	// mount the facets resource
-	api.use('/users', users({ config, db }));
-
-	api.use('/productos', presupuestoApi);
+	api.use('/pedidos', pedidosApi);
 
 	// perhaps expose some API metadata at the root
 	api.get('/', (req, res) => {
