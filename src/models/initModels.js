@@ -31,6 +31,9 @@ export default (sequelize) => {
     nombre: {
       type: Sequelize.STRING,
     },
+    telefono: {
+      type: Sequelize.STRING,
+    },
   }, { timestamps: false });
 
   const pedidoModel = sequelize.define('pedidos', {
