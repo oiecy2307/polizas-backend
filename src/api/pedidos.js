@@ -59,6 +59,71 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 			});
 		});
 
+	router.route('/nueva-orden')
+		.post((req, res) => {
+			const {
+				nombreCliente,
+				telefono,
+				nombreVehiculo,
+				placa,
+				manoObraTotal,
+				factura,
+				folio,
+				total,
+				frenos,
+				suspensiones,
+			} = req.body;
+			Cliente.findOrCreate({
+				where: {
+					nombre: nombreCliente,
+				},
+				defaults: {
+					nombre: nombreCliente,
+					telefono,
+				},
+			})
+			.then(([cliente, clientCreated]) => {
+				if (!clientCreated && cliente.dataValues.telefono !== telefono) {
+					cliente.update({
+						telefono,
+					});
+				}
+				Vehiculo.findOrCreate({
+					where: {
+						nombre: nombreVehiculo,
+					},
+					defaults: {
+						nombre: nombreVehiculo,
+					},
+				})
+				.then(([vehiculo, vehiculoCreated]) => {
+					const registro = Pedido.build({
+						idVehiculo: vehiculo.id,
+						idCliente: cliente.id,
+						fecha: new Date(),
+						placa,
+						manoObraTotal,
+						factura,
+						folio,
+						total,
+					});
+					registro.save().then(() => {
+						console.log('vehiculo', vehiculo);
+						console.log('vehiculo', vehiculo.id);
+						console.log('cliente', cliente);
+						console.log('cliente', cliente.id);
+						res.status(200).send(registro);
+					});
+				});
+			})
+			.catch((err) => {
+        res.status(500).send(err);
+      });
+			// RegistroServicio.create({
+			//
+			// })
+		});
+
 
 
 

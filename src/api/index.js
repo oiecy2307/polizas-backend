@@ -22,7 +22,7 @@ export default ({ config, db }) => {
     registroServicioModel
 	);
 
-	api.use('/pedidos', pedidosApi);
+	api.use('/', pedidosApi);
 
 	// perhaps expose some API metadata at the root
 	api.get('/', (req, res) => {
