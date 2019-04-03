@@ -79,9 +79,49 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 
 	router.route('/pedidos')
 		.get((req, res) => {
-			Pedido.findAll()
-			.then((pedidos) => {
-				res.status(200).json(pedidos);
+			const { skip, filter, value } = req.query;
+			const pedido = {
+				include: [
+					{
+						model: Vehiculo,
+					},
+					{
+						model: Cliente,
+					},
+				],
+				limit: 5,
+			};
+			if (skip) pedido.offset = parseInt(skip);
+			if (filter && value) {
+				if (filter === 'vehiculo') {
+					pedido.include[0].where = {
+						nombre: { [sequelize.Op.like]: `%${value}%` },
+					};
+				}
+				else if (filter === 'cliente') {
+					pedido.include[1].where = {
+						[sequelize.Op.or]: [
+							{
+								nombre: { [sequelize.Op.like]: `%${value}%` },
+							},
+							{
+								telefono: { [sequelize.Op.like]: `${value}%` },
+							},
+						],
+					};
+				}
+				else {
+					pedido.where = {
+						[filter]: { [sequelize.Op.like]: `%${value}%` },
+					};
+				}
+			}
+			Pedido.findAndCountAll(pedido)
+			.then((response) => {
+				res.status(200).json({
+					pedidos: response.rows,
+					count: response.count,
+				});
 			})
 			.catch((err) => {
 				res.status(500).send(err);
