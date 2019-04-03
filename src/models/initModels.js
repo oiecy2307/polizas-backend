@@ -61,6 +61,22 @@ export default (sequelize) => {
     total: {
       type: Sequelize.DECIMAL(10, 2),
     },
+    otros: {
+      type: Sequelize.TEXT,
+      defaultValue: '',
+    },
+    cambioAceite: {
+      type: Sequelize.BOOLEAN,
+    },
+    afinacion: {
+      type: Sequelize.BOOLEAN,
+    },
+    idVehiculo: {
+      type: Sequelize.INTEGER,
+    },
+    idCliente: {
+      type: Sequelize.INTEGER,
+    },
   }, { timestamps: false });
 
   const registroServicioModel = sequelize.define('registroservicio', {
@@ -78,6 +94,18 @@ export default (sequelize) => {
     precio: {
       type: Sequelize.DECIMAL(10, 2),
     },
+    cantidad: {
+      type: Sequelize.INTEGER,
+    },
+    idVehiculo: {
+      type: Sequelize.INTEGER,
+    },
+    idPedido: {
+      type: Sequelize.INTEGER,
+    },
+    idServicio: {
+      type: Sequelize.INTEGER,
+    },
   }, { timestamps: false });
 
   // clienteModel.belongsTo(pedidoModel, { foreignKey: 'idCliente' });
@@ -93,8 +121,8 @@ export default (sequelize) => {
   vehiculoModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
   registroServicioModel.hasOne(vehiculoModel, { foreignKey: 'id' });
 
-  servicioModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
-  registroServicioModel.hasMany(servicioModel, { foreignKey: 'id' });
+  // servicioModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
+  // registroServicioModel.hasMany(servicioModel, { foreignKey: 'id' });
 
   return {
     vehiculoModel,

@@ -1,5 +1,45 @@
 import express from 'express';
 
+const nombresServicios = [
+	'Balata delanteras',
+	'Balata traseras',
+	'Disco nuevo',
+	'Tambor nuevo',
+	'Bomba de frenos',
+	'Cilindro de rueda',
+	'Líquido',
+	'Herrajes',
+	'Rectificado disco',
+	'Rectificado tambor',
+	'Bujías',
+	'Aceite',
+	'Filtro gasolina',
+	'Filtro aceite',
+	'Filtro aire',
+	'Presurisado',
+	'CARBUCLINK',
+	'ANTICONGELANTE',
+	'Amortiguadores delanteros',
+	'Amortiguadores traseros',
+	'Base amortiguadores delanteros',
+	'Base amortiguadores traseros',
+	'Bieletas',
+	'Terminales',
+	'Rótula inferior',
+	'Rótula superior',
+	'Tornillo estabilizador delantero',
+	'Tornillo estabilizador trasero',
+	'Bujes superior',
+	'Horquilla inferior',
+	'Horquilla superior',
+	'Goma barra estabilizadora',
+	'Goma cremallera',
+	'Buje inferior grande',
+	'Buje inferior chico',
+	'Maza',
+	'Balero doble',
+];
+
 export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio) => {
 	const router = express.Router();
 
@@ -59,6 +99,78 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 			});
 		});
 
+	router.route('/servicios-auto/:id')
+		.get((req, res) => {
+			const id = req.params.id;
+			RegistroServicio.findAll({
+				where: {
+					idVehiculo: id,
+				},
+			})
+			.then((servicios) => {
+				servicios.reverse();
+				const frenos = [];
+				for (let i = 1; i <= 18; i++) {
+					const freno = servicios.find((f) => f.idServicio === i);
+					if (freno) {
+						frenos.push({
+							value: i,
+							nombre: nombresServicios[i - 1],
+							cantidad: freno.cantidad,
+							noParte: freno.numeroParte,
+							precio: freno.precio,
+							manoObra: freno.manoObra,
+							activado: true,
+						});
+					}
+					else {
+						frenos.push({
+							value: i,
+							nombre: nombresServicios[i - 1],
+							cantidad: '',
+							noParte: '',
+							precio: '',
+							manoObra: '',
+							activado: false,
+						});
+					}
+				}
+				const suspensiones = [];
+				for (let i = 19; i <= 37; i++) {
+					const suspension = servicios.find((f) => f.idServicio === i);
+					if (suspension) {
+						suspensiones.push({
+							value: i,
+							nombre: nombresServicios[i - 1],
+							cantidad: suspension.cantidad,
+							noParte: suspension.numeroParte,
+							precio: suspension.precio,
+							manoObra: suspension.manoObra,
+							activado: true,
+						});
+					}
+					else {
+						suspensiones.push({
+							value: i,
+							nombre: nombresServicios[i - 1],
+							cantidad: '',
+							noParte: '',
+							precio: '',
+							manoObra: '',
+							activado: false,
+						});
+					}
+				}
+				res.status(200).send({
+					frenos,
+					suspensiones,
+				});
+			})
+			.catch((err) => {
+				res.status(500).send(err);
+			});
+		});
+
 	router.route('/nueva-orden')
 		.post((req, res) => {
 			const {
@@ -70,8 +182,10 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 				factura,
 				folio,
 				total,
-				frenos,
-				suspensiones,
+				servicios,
+				otros,
+				cambioAceite,
+				afinacion,
 			} = req.body;
 			Cliente.findOrCreate({
 				where: {
@@ -96,7 +210,7 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 						nombre: nombreVehiculo,
 					},
 				})
-				.then(([vehiculo, vehiculoCreated]) => {
+				.then(([vehiculo]) => {
 					const registro = Pedido.build({
 						idVehiculo: vehiculo.id,
 						idCliente: cliente.id,
@@ -106,189 +220,36 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 						factura,
 						folio,
 						total,
+						otros,
+						cambioAceite,
+						afinacion,
 					});
 					registro.save().then(() => {
-						console.log('vehiculo', vehiculo);
-						console.log('vehiculo', vehiculo.id);
-						console.log('cliente', cliente);
-						console.log('cliente', cliente.id);
-						res.status(200).send(registro);
+						RegistroServicio
+						.bulkCreate(servicios
+							.filter((servicio) => servicio.activado && servicio.cantidad && servicio.noParte && servicio.precio)
+							.map((servicio) => ({
+								idVehiculo: vehiculo.id,
+								idServicio: servicio.value,
+								idPedido: registro.id,
+								numeroParte: servicio.noParte,
+								manoObra: servicio.manoObra,
+								precio: servicio.precio,
+								cantidad: servicio.cantidad,
+						})))
+						.then((servicios) => {
+							res.status(200).send({
+								registro,
+								servicios,
+							});
+						});
 					});
 				});
 			})
 			.catch((err) => {
         res.status(500).send(err);
       });
-			// RegistroServicio.create({
-			//
-			// })
 		});
 
-
-
-
-
-
-
-
-
-	// GET PRESUPUESTO
-	router.route('/presupuesto')
-		.get((req, res) => {
-			Servicio.findAll({
-				include: [{
-					model: Cliente,
-					include: [
-						{
-							model: Vehiculo,
-						},
-						{
-							model: Pedido,
-						},
-						{
-							model: RegistroServicio,
-						},
-					],
-				}],
-			})
-			.then((products) => {
-				res.status(200).json(products);
-			})
-			.catch((err) => {
-				res.status(500).send(err);
-			});
-		});
-
-	// CREATE NEW PRESUPUESTO
-	router.route('/presupuesto')
-		.post((req, res) => {
-			try {
-				const {
-					periodo,
-					gananciaPresupuestadaTotal,
-					cantidadPresupuestadaTotal,
-					anio,
-				} = req.body;
-				if (!periodo) {
-					res.status(400).json({ error: 'Faltan parámetros' });
-					return;
-				}
-				const presupuesto = Servicio.build({
-					periodo,
-					gananciaPresupuestadaTotal,
-					cantidadPresupuestadaTotal,
-					anio,
-				});
-
-				presupuesto
-				.save()
-				.then((newPresupuesto) => {
-					res.status(200).json(newPresupuesto);
-				})
-				.catch((e) => {
-					res.status(500).send(e);
-				});
-			}
-			catch (e) {
-				res.status(500).send(e);
-			}
-		});
-
-	//CREATE NEW ITEM PRESUPUESTO
-	router.route('/item-presupuesto')
-		.post((req, res) => {
-			try {
-				const {
-					presupuestoId,
-					productoId,
-				} = req.body;
-				if (!presupuestoId || !productoId) {
-					res.status(400).json({ error: 'Faltan parámetros' });
-					return;
-				}
-				const itemPresupuesto = Cliente.build({
-					presupuestoid: presupuestoId,
-					CIDPRODUCTO: productoId,
-				});
-
-				itemPresupuesto
-					.save()
-					.then((newCliente) => {
-						res.status(200).json(newCliente);
-					})
-					.catch((e) => {
-						res.status(500).send(e);
-					});
-			}
-			catch (e) {
-				res.status(500).send(e);
-			}
-		});
-
-	//CREATE NEW ITEM GANANCIA
-	router.route('/item-ganancia')
-		.post((req, res) => {
-			try {
-				const {
-					cantidad,
-					periodo,
-					presupuestoitemid,
-				} = req.body;
-				if (!cantidad || !periodo || !presupuestoitemid) {
-					res.status(400).json({ error: 'Faltan parámetros' });
-					return;
-				}
-				const itemGanancia = Pedido.build({
-					cantidad,
-					periodo,
-					presupuestoitemid,
-				});
-
-				itemGanancia
-					.save()
-					.then((newItemGanancia) => {
-						res.status(200).json(newItemGanancia);
-					})
-					.catch((e) => {
-						res.status(500).send(e);
-					});
-			}
-			catch (e) {
-				res.status(500).send(e);
-			}
-		});
-
-		//CREATE NEW ITEM CANTIDAD
-		router.route('/item-cantidad')
-			.post((req, res) => {
-				try {
-					const {
-						cantidad,
-						periodo,
-						presupuestoitemid,
-					} = req.body;
-					if (!cantidad || !periodo || !presupuestoitemid) {
-						res.status(400).json({ error: 'Faltan parámetros' });
-						return;
-					}
-					const itemCantidad = RegistroServicio.build({
-						cantidad,
-						periodo,
-						presupuestoitemid,
-					});
-
-					itemCantidad
-						.save()
-						.then((newItemCantidad) => {
-							res.status(200).json(newItemCantidad);
-						})
-						.catch((e) => {
-							res.status(500).send(e);
-						});
-				}
-				catch (e) {
-					res.status(500).send(e);
-				}
-			});
-	return router;
+		return router;
 };
