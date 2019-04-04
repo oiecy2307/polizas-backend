@@ -43,7 +43,7 @@ export default (sequelize) => {
       autoIncrement: true,
     },
     fecha: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       defaultValue: new Date(),
     },
     placa: {
