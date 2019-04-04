@@ -6,130 +6,139 @@ Object.defineProperty(exports, "__esModule", {
 var Sequelize = require('sequelize');
 
 exports.default = function (sequelize) {
-  var presupuestoModel = sequelize.define('presupuestos', {
-    presupuestoid: {
+  var vehiculoModel = sequelize.define('vehiculos', {
+    id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
-    },
-    periodo: {
-      type: Sequelize.STRING
-    },
-    gananciaPresupuestadaTotal: {
-      type: Sequelize.FLOAT,
-      defaultValue: 0
-    },
-    cantidadPresupuestadaTotal: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0
-    },
-    anio: {
-      type: Sequelize.INTEGER,
-      defaultValue: new Date().getFullYear()
     },
     nombre: {
       type: Sequelize.STRING
     }
   }, { timestamps: false });
 
-  var productoModel = sequelize.define('admProductos', {
-    CIDPRODUCTO: {
+  var servicioModel = sequelize.define('servicios', {
+    id: {
       type: Sequelize.INTEGER,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
-    CNOMBREPRODUCTO: {
+    nombre: {
+      type: Sequelize.STRING
+    }
+  }, { timestamps: false });
+
+  var clienteModel = sequelize.define('clientes', {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    nombre: {
       type: Sequelize.STRING
     },
-    CTIPOPRODUCTO: {
+    telefono: {
+      type: Sequelize.STRING
+    }
+  }, { timestamps: false });
+
+  var pedidoModel = sequelize.define('pedidos', {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    fecha: {
+      type: Sequelize.DATEONLY,
+      defaultValue: new Date()
+    },
+    placa: {
+      type: Sequelize.STRING
+    },
+    factura: {
+      type: Sequelize.STRING
+    },
+    folio: {
+      type: Sequelize.STRING
+    },
+    manoObraTotal: {
+      type: Sequelize.DECIMAL(10, 2)
+    },
+    total: {
+      type: Sequelize.DECIMAL(10, 2)
+    },
+    costoOtros: {
+      type: Sequelize.DECIMAL(10, 2)
+    },
+    otros: {
+      type: Sequelize.TEXT,
+      defaultValue: ''
+    },
+    cambioAceite: {
+      type: Sequelize.BOOLEAN
+    },
+    afinacion: {
+      type: Sequelize.BOOLEAN
+    },
+    idVehiculo: {
       type: Sequelize.INTEGER
     },
-    CDESCRIPCIONPRODUCTO: {
+    idCliente: {
+      type: Sequelize.INTEGER
+    }
+  }, { timestamps: false });
+
+  var registroServicioModel = sequelize.define('registroservicio', {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    numeroParte: {
       type: Sequelize.STRING
     },
-    CPRECIO1: {
-      type: Sequelize.FLOAT
+    manoObra: {
+      type: Sequelize.DECIMAL(10, 2)
     },
-    CPRECIO2: {
-      type: Sequelize.FLOAT
-    },
-    CPRECIO3: {
-      type: Sequelize.FLOAT
-    },
-    CPRECIO4: {
-      type: Sequelize.FLOAT
-    },
-    CPRECIO5: {
-      type: Sequelize.FLOAT
-    },
-    CPRECIO6: {
-      type: Sequelize.FLOAT
-    },
-    CPRECIO7: {
-      type: Sequelize.FLOAT
-    },
-    CPRECIO8: {
-      type: Sequelize.FLOAT
-    },
-    CPRECIO9: {
-      type: Sequelize.FLOAT
-    },
-    CPRECIO10: {
-      type: Sequelize.FLOAT
-    }
-  }, { timestamps: false });
-
-  var itemPresupuestoModel = sequelize.define('itemPresupuestos', {
-    presupuestoitemid: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    }
-  }, { timestamps: false });
-
-  var itemGananciaEstimadaModel = sequelize.define('itemGanancias', {
-    itemgananciaid: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    periodo: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0
+    precio: {
+      type: Sequelize.DECIMAL(10, 2)
     },
     cantidad: {
-      type: Sequelize.FLOAT
+      type: Sequelize.INTEGER
+    },
+    idVehiculo: {
+      type: Sequelize.INTEGER
+    },
+    idPedido: {
+      type: Sequelize.INTEGER
+    },
+    idServicio: {
+      type: Sequelize.INTEGER
     }
   }, { timestamps: false });
 
-  var itemCantidadEstimadaModel = sequelize.define('itemCantidadUnidades', {
-    itemcantidadunidades: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    periodo: {
-      type: Sequelize.INTEGER,
-      defaultValue: 0
-    },
-    cantidad: {
-      type: Sequelize.FLOAT
-    }
-  }, { timestamps: false });
+  pedidoModel.belongsTo(clienteModel, { foreignKey: 'idCliente' });
+  clienteModel.hasMany(pedidoModel, { foreignKey: 'idCliente' });
+  // pedidoModel.hasOne(clienteModel, { foreignKey: 'id' });
 
-  presupuestoModel.hasMany(itemPresupuestoModel, { foreignKey: 'presupuestoid' });
-  itemPresupuestoModel.belongsTo(presupuestoModel, { foreignKey: 'presupuestoid' });
-  itemPresupuestoModel.belongsTo(productoModel, { foreignKey: 'CIDPRODUCTO' });
-  itemPresupuestoModel.hasMany(itemGananciaEstimadaModel, { foreignKey: 'presupuestoitemid' });
-  itemPresupuestoModel.hasMany(itemCantidadEstimadaModel, { foreignKey: 'presupuestoitemid' });
-  itemGananciaEstimadaModel.belongsTo(itemPresupuestoModel, { foreignKey: 'presupuestoitemid' });
-  itemCantidadEstimadaModel.belongsTo(itemPresupuestoModel, { foreignKey: 'presupuestoitemid' });
+  pedidoModel.belongsTo(vehiculoModel, { foreignKey: 'idVehiculo' });
+  vehiculoModel.hasMany(pedidoModel, { foreignKey: 'idVehiculo' });
+
+  registroServicioModel.belongsTo(pedidoModel, { foreignKey: 'id' });
+  pedidoModel.hasMany(registroServicioModel, { foreignKey: 'id' });
+
+  vehiculoModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
+  registroServicioModel.hasOne(vehiculoModel, { foreignKey: 'id' });
+
+  // servicioModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
+  // registroServicioModel.hasMany(servicioModel, { foreignKey: 'id' });
 
   return {
-    presupuestoModel: presupuestoModel,
-    productoModel: productoModel,
-    itemPresupuestoModel: itemPresupuestoModel,
-    itemGananciaEstimadaModel: itemGananciaEstimadaModel,
-    itemCantidadEstimadaModel: itemCantidadEstimadaModel
+    vehiculoModel: vehiculoModel,
+    servicioModel: servicioModel,
+    clienteModel: clienteModel,
+    pedidoModel: pedidoModel,
+    registroServicioModel: registroServicioModel
   };
 };
 //# sourceMappingURL=initModels.js.map

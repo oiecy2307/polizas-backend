@@ -62,6 +62,7 @@
     "body-parser": "^1.13.3",
     "compression": "^1.5.2",
     "cors": "^2.7.1",
+    "ejs": "^2.6.1",
     "express": "^4.13.3",
     "express-rate-limit": "^3.3.0",
     "helmet": "^3.14.0",

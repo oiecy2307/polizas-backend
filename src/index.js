@@ -40,6 +40,9 @@ app.use(express.static(`${__dirname}/builds`));
 app.use(express.static(`${__dirname}/public`));
 app.use(express.static(`${__dirname}/css`));
 
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
 app.server.listen(process.env.PORT || config.port, () => {
   console.log(`Started on port ${app.server.address().port}`);
 });
