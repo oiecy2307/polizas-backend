@@ -61,6 +61,9 @@ export default (sequelize) => {
     total: {
       type: Sequelize.DECIMAL(10, 2),
     },
+    costoOtros: {
+      type: Sequelize.DECIMAL(10, 2),
+    },
     otros: {
       type: Sequelize.TEXT,
       defaultValue: '',
@@ -108,12 +111,12 @@ export default (sequelize) => {
     },
   }, { timestamps: false });
 
-  // clienteModel.belongsTo(pedidoModel, { foreignKey: 'idCliente' });
-  clienteModel.hasMany(pedidoModel, { foreignKey: 'id' });
-  pedidoModel.hasOne(clienteModel, { foreignKey: 'id' });
+  pedidoModel.belongsTo(clienteModel, { foreignKey: 'idCliente' });
+  clienteModel.hasMany(pedidoModel, { foreignKey: 'idCliente' });
+  // pedidoModel.hasOne(clienteModel, { foreignKey: 'id' });
 
-  vehiculoModel.belongsTo(pedidoModel, { foreignKey: 'id' });
-  pedidoModel.hasOne(vehiculoModel, { foreignKey: 'id' });
+  pedidoModel.belongsTo(vehiculoModel, { foreignKey: 'idVehiculo' });
+  vehiculoModel.hasMany(pedidoModel, { foreignKey: 'idVehiculo' });
 
   registroServicioModel.belongsTo(pedidoModel, { foreignKey: 'id' });
   pedidoModel.hasMany(registroServicioModel, { foreignKey: 'id' });

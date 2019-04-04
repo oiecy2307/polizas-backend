@@ -89,7 +89,10 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 						model: Cliente,
 					},
 				],
-				limit: 5,
+				limit: 20,
+				order: [
+					['fecha', 'DESC'],
+				],
 			};
 			if (skip) pedido.offset = parseInt(skip);
 			if (filter && value) {
@@ -137,6 +140,22 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 			.catch((err) => {
 				res.status(500).send(err);
 			});
+		});
+
+	router.route('/servicios-pedido/:id')
+		.get((req, res) => {
+			const id = req.params.id;
+			RegistroServicio.findAll({
+				where: {
+					idPedido: id,
+				},
+			})
+			.then((servicios) => {
+				res.status(200).send(servicios);
+			})
+			.catch((err) => {
+				res.status(500).send(err);
+			})
 		});
 
 	router.route('/servicios-auto/:id')
@@ -226,6 +245,7 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 				otros,
 				cambioAceite,
 				afinacion,
+				costoOtros,
 			} = req.body;
 			Cliente.findOrCreate({
 				where: {
@@ -263,6 +283,7 @@ export default (sequelize, Vehiculo, Servicio, Cliente, Pedido, RegistroServicio
 						otros,
 						cambioAceite,
 						afinacion,
+						costoOtros,
 					});
 					registro.save().then(() => {
 						RegistroServicio
