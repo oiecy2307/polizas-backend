@@ -42,11 +42,14 @@ app.use(express.static(`${__dirname}/css`));
 
 app.server.listen(process.env.PORT || config.port, () => {
   console.log(`Started on port ${app.server.address().port}`);
-
 });
 
 app.get('/', (req, res) => {
   res.status(200).render(path.join(`${__dirname}/public/index.html`));
+});
+
+app.get('/nuevo', (req, res) => {
+  res.status(200).render(path.join(`${__dirname}/public/nuevo.html`));
 });
 
 initializeDb((db) => {
