@@ -36,6 +36,8 @@ app.use(bodyParser.json({
 	limit : config.bodyLimit,
 }));
 
+// Esto se descomenta en caso de usar la api para regresar archivos html
+
 app.use(express.static(`${__dirname}/builds`));
 app.use(express.static(`${__dirname}/public`));
 app.use(express.static(`${__dirname}/css`));
@@ -49,10 +51,6 @@ app.server.listen(process.env.PORT || config.port, () => {
 
 app.get('/', (req, res) => {
   res.status(200).render(path.join(`${__dirname}/public/index.html`));
-});
-
-app.get('/nuevo', (req, res) => {
-  res.status(200).render(path.join(`${__dirname}/public/nuevo.html`));
 });
 
 initializeDb((db) => {

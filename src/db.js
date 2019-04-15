@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 export default (callback) => {
-	const sequelize = new Sequelize('autopartes', 'pedro', 'M0r0cha95!', {
+	const sequelize = new Sequelize('incidencias', 'pedro', 'M0r0cha95!', {
 		host: '104.154.140.189',
 		dialect: 'mysql',
 		operatorsAliases: false,

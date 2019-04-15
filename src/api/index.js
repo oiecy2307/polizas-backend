@@ -1,28 +1,22 @@
 import { version } from '../../package.json';
 import { Router } from 'express';
-import pedidos from './pedidos';
+import methods from './methods';
 import initModels from '../models/initModels';
 
-export default ({ config, db }) => {
+export default ({ db }) => {
 	let api = Router();
 	const {
 		vehiculoModel,
-    servicioModel,
-    clienteModel,
-    pedidoModel,
-    registroServicioModel,
+		pedidoModel,
 	} = initModels(db);
 
-	const pedidosApi = pedidos(
+	const methodsApi = methods(
 		db,
 		vehiculoModel,
-    servicioModel,
-    clienteModel,
-    pedidoModel,
-    registroServicioModel
+    pedidoModel
 	);
 
-	api.use('/', pedidosApi);
+	api.use('/', methodsApi);
 
 	// perhaps expose some API metadata at the root
 	api.get('/', (req, res) => {
