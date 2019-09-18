@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 var Sequelize = require('sequelize');
 
 exports.default = function (callback) {
-	var sequelize = new Sequelize('autopartes', 'pedro', 'M0r0cha95!', {
-		host: '104.154.140.189',
+	var sequelize = new Sequelize('datank', 'pedro_datank', 'datank123', {
+		host: '23.229.209.227',
 		dialect: 'mysql',
 		operatorsAliases: false,
 		port: 3306,

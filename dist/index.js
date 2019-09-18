@@ -76,6 +76,8 @@ app.use(_bodyParser2.default.json({
   limit: _config2.default.bodyLimit
 }));
 
+// Esto se descomenta en caso de usar la api para regresar archivos html
+
 app.use(_express2.default.static(__dirname + '/builds'));
 app.use(_express2.default.static(__dirname + '/public'));
 app.use(_express2.default.static(__dirname + '/css'));
@@ -89,10 +91,6 @@ app.server.listen(process.env.PORT || _config2.default.port, function () {
 
 app.get('/', function (req, res) {
   res.status(200).render(_path2.default.join(__dirname + '/public/index.html'));
-});
-
-app.get('/nuevo', function (req, res) {
-  res.status(200).render(_path2.default.join(__dirname + '/public/nuevo.html'));
 });
 
 (0, _db2.default)(function (db) {

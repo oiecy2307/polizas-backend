@@ -6,139 +6,110 @@ Object.defineProperty(exports, "__esModule", {
 var Sequelize = require('sequelize');
 
 exports.default = function (sequelize) {
-  var vehiculoModel = sequelize.define('vehiculos', {
+  var userModel = sequelize.define('users', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    nombre: {
+    email: {
+      type: Sequelize.STRING
+    },
+    password: {
+      type: Sequelize.STRING
+    },
+    name: {
+      type: Sequelize.STRING
+    },
+    type: {
       type: Sequelize.STRING
     }
   }, { timestamps: false });
 
-  var servicioModel = sequelize.define('servicios', {
+  var eventModel = sequelize.define('events', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    nombre: {
-      type: Sequelize.STRING
-    }
-  }, { timestamps: false });
-
-  var clienteModel = sequelize.define('clientes', {
-    id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    nombre: {
+    topic: {
       type: Sequelize.STRING
     },
-    telefono: {
-      type: Sequelize.STRING
-    }
-  }, { timestamps: false });
-
-  var pedidoModel = sequelize.define('pedidos', {
-    id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    fecha: {
+    date: {
       type: Sequelize.DATEONLY,
       defaultValue: new Date()
     },
-    placa: {
+    scheduleStart: {
       type: Sequelize.STRING
     },
-    factura: {
+    scheduleEnd: {
       type: Sequelize.STRING
     },
-    folio: {
+    address: {
       type: Sequelize.STRING
     },
-    manoObraTotal: {
-      type: Sequelize.DECIMAL(10, 2)
+    diary: {
+      type: Sequelize.STRING
     },
-    total: {
-      type: Sequelize.DECIMAL(10, 2)
-    },
-    costoOtros: {
-      type: Sequelize.DECIMAL(10, 2)
-    },
-    otros: {
-      type: Sequelize.TEXT,
-      defaultValue: ''
-    },
-    cambioAceite: {
+    active: {
       type: Sequelize.BOOLEAN
-    },
-    afinacion: {
-      type: Sequelize.BOOLEAN
-    },
-    idVehiculo: {
-      type: Sequelize.INTEGER
-    },
-    idCliente: {
-      type: Sequelize.INTEGER
     }
   }, { timestamps: false });
 
-  var registroServicioModel = sequelize.define('registroservicio', {
+  var assistanModel = sequelize.define('assistants', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    numeroParte: {
-      type: Sequelize.STRING
-    },
-    manoObra: {
-      type: Sequelize.DECIMAL(10, 2)
-    },
-    precio: {
-      type: Sequelize.DECIMAL(10, 2)
-    },
-    cantidad: {
+    user: {
       type: Sequelize.INTEGER
     },
-    idVehiculo: {
-      type: Sequelize.INTEGER
-    },
-    idPedido: {
-      type: Sequelize.INTEGER
-    },
-    idServicio: {
+    event: {
       type: Sequelize.INTEGER
     }
   }, { timestamps: false });
 
-  pedidoModel.belongsTo(clienteModel, { foreignKey: 'idCliente' });
-  clienteModel.hasMany(pedidoModel, { foreignKey: 'idCliente' });
-  // pedidoModel.hasOne(clienteModel, { foreignKey: 'id' });
-
-  pedidoModel.belongsTo(vehiculoModel, { foreignKey: 'idVehiculo' });
-  vehiculoModel.hasMany(pedidoModel, { foreignKey: 'idVehiculo' });
-
-  registroServicioModel.belongsTo(pedidoModel, { foreignKey: 'id' });
-  pedidoModel.hasMany(registroServicioModel, { foreignKey: 'id' });
-
-  vehiculoModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
-  registroServicioModel.hasOne(vehiculoModel, { foreignKey: 'id' });
-
-  // servicioModel.belongsTo(registroServicioModel, { foreignKey: 'id' });
-  // registroServicioModel.hasMany(servicioModel, { foreignKey: 'id' });
+  var talkModel = sequelize.define('talks', {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    user: {
+      type: Sequelize.INTEGER
+    },
+    userName: {
+      type: Sequelize.STRING
+    },
+    email: {
+      type: Sequelize.STRING
+    },
+    title: {
+      type: Sequelize.STRING
+    },
+    aboutTalk: {
+      type: Sequelize.STRING
+    },
+    aboutYou: {
+      type: Sequelize.STRING
+    },
+    twitter: {
+      type: Sequelize.STRING
+    },
+    linkedin: {
+      type: Sequelize.STRING
+    },
+    facebook: {
+      type: Sequelize.STRING
+    }
+  }, { timestamps: false });
 
   return {
-    vehiculoModel: vehiculoModel,
-    servicioModel: servicioModel,
-    clienteModel: clienteModel,
-    pedidoModel: pedidoModel,
-    registroServicioModel: registroServicioModel
+    userModel: userModel,
+    eventModel: eventModel,
+    assistanModel: assistanModel,
+    talkModel: talkModel
   };
 };
 //# sourceMappingURL=initModels.js.map
