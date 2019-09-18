@@ -6,14 +6,18 @@ import initModels from '../models/initModels';
 export default ({ db }) => {
 	let api = Router();
 	const {
-		vehiculoModel,
-		pedidoModel,
+		userModel,
+		eventModel,
+		assistanModel,
+		talkModel,
 	} = initModels(db);
 
 	const methodsApi = methods(
 		db,
-		vehiculoModel,
-    pedidoModel
+		userModel,
+		eventModel,
+		assistanModel,
+		talkModel
 	);
 
 	api.use('/', methodsApi);
