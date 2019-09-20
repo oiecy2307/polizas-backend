@@ -43,6 +43,7 @@ export default (sequelize, User, Event, Assistant, Talk) => {
 				scheduleEnd,
 				address,
 				diary,
+				talks,
 			} = req.body;
 			const event = Event.build({
 				topic,
@@ -51,6 +52,7 @@ export default (sequelize, User, Event, Assistant, Talk) => {
 				scheduleEnd,
 				address,
 				diary,
+				talks,
 			});
 			event.save()
 			.then((result) => {
@@ -182,6 +184,17 @@ export default (sequelize, User, Event, Assistant, Talk) => {
 					res.status(500).send(err);
 				});
 			});
+
+		router.route('/talks')
+			.get((req, res) => {
+				Talk.findAll()
+				.then((talks) => {
+					res.status(200).json(talks);
+				})
+				.catch((err) => {
+					res.status(500).send(err);
+				});
+			})
 
 		return router;
 };

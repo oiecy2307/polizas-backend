@@ -48,6 +48,9 @@ export default (sequelize) => {
     active: {
       type: Sequelize.BOOLEAN,
     },
+    talks: {
+      type: Sequelize.TEXT,
+    },
   }, { timestamps: false });
 
   const assistanModel = sequelize.define('assistants', {

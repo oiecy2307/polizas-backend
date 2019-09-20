@@ -49,7 +49,8 @@ exports.default = function (sequelize, User, Event, Assistant, Talk) {
 		    scheduleStart = _req$body2.scheduleStart,
 		    scheduleEnd = _req$body2.scheduleEnd,
 		    address = _req$body2.address,
-		    diary = _req$body2.diary;
+		    diary = _req$body2.diary,
+		    talks = _req$body2.talks;
 
 		var event = Event.build({
 			topic: topic,
@@ -57,7 +58,8 @@ exports.default = function (sequelize, User, Event, Assistant, Talk) {
 			scheduleStart: scheduleStart,
 			scheduleEnd: scheduleEnd,
 			address: address,
-			diary: diary
+			diary: diary,
+			talks: talks
 		});
 		event.save().then(function (result) {
 			res.status(200).json(result);
@@ -187,6 +189,14 @@ exports.default = function (sequelize, User, Event, Assistant, Talk) {
 		});
 		talk.save().then(function (result) {
 			res.status(200).json(result);
+		}).catch(function (err) {
+			res.status(500).send(err);
+		});
+	});
+
+	router.route('/talks').get(function (req, res) {
+		Talk.findAll().then(function (talks) {
+			res.status(200).json(talks);
 		}).catch(function (err) {
 			res.status(500).send(err);
 		});

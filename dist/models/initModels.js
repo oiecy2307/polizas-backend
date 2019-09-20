@@ -53,6 +53,9 @@ exports.default = function (sequelize) {
     },
     active: {
       type: Sequelize.BOOLEAN
+    },
+    talks: {
+      type: Sequelize.TEXT
     }
   }, { timestamps: false });
 
