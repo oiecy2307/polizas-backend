@@ -1,12 +1,11 @@
 const Sequelize = require('sequelize');
 
 export default (callback) => {
-	const sequelize = new Sequelize('datank-bd', 'pedro', 'pedroejemplo123', {
-		host: '35.188.186.135',
+	const sequelize = new Sequelize('suppdesk', 'pedro', 'm0r0cha95', {
+		host: '23.229.209.227',
 		dialect: 'mysql',
 		operatorsAliases: false,
 		port: 3306,
-
 		pool: {
 			max: 5,
 			min: 0,
