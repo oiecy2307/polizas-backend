@@ -39,7 +39,7 @@ export default (sequelize) => {
       type: DataTypes.ENUM('admin', 'technical', 'salesman'),
       allowNull: false,
     },
-  }, { timestamps: false });
+  }, {});
 
   return User;
 };

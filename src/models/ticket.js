@@ -7,18 +7,18 @@ export default (sequelize) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    reporterId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    technicalId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    clientId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
+    // reporterId: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    // technicalId: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
+    // clientId: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // },
     description: {
       type: DataTypes.TEXT,
       allowNull: false,
