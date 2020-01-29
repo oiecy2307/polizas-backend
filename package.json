@@ -55,6 +55,7 @@
   "license": "MIT",
   "dependencies": {
     "@google-cloud/datastore": "^2.0.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.13.3",
     "compression": "^1.5.2",
     "cors": "^2.7.1",
@@ -63,6 +64,7 @@
     "express-rate-limit": "^3.3.0",
     "helmet": "^3.14.0",
     "jsonschema": "^1.2.4",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.8.0",
     "mysql2": "^1.6.5",
     "nodemon": "^1.18.10",
