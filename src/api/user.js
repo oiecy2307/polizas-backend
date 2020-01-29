@@ -5,22 +5,17 @@ export default (sequelize, User) => {
 
   router
     .route('/')
-    .get((req, res) => {
-      res.status(200).json({
-        data: [],
-      });
-    })
-    // .get(async (req, res) => {
-    //   try {
-    //     const users = await User.findAndCountAll();
-    //     res.status(200).json({
-    //       data: users,
-    //       error: false,
-    //     });
-    //   } catch (e) {
-    //     res.status(500).send(err);
-    //   }
-    // });
+    .get(async (req, res) => {
+      try {
+        const users = await User.findAndCountAll();
+        res.status(200).json({
+          data: users,
+          error: false,
+        });
+      } catch (e) {
+        res.status(500).send(e);
+      }
+    });
 
   return router;
 };

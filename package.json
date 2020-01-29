@@ -19,7 +19,7 @@
       "security"
     ],
     "parserOptions": {
-      "ecmaVersion": 7,
+      "ecmaVersion": 8,
       "sourceType": "module"
     },
     "env": {
@@ -35,10 +35,6 @@
       "arrow-body-style": [
         2,
         "as-needed"
-      ],
-      "brace-style": [
-        "error",
-        "stroustrup"
       ],
       "comma-dangle": [
         2,

@@ -12,15 +12,7 @@ export default ({ db }) => {
 
 	// db.sync({ force: true });
 
-	// const methodsApi = methods(
-	// 	db,
-	// 	userModel,
-	// 	eventModel,
-	// 	assistanModel,
-	// 	talkModel
-	// );
-
-	api.use('/users', userMethods);
+	api.use('/users', userMethods(db, userModel));
 
 	// perhaps expose some API metadata at the root
 	api.get('/', (req, res) => {
