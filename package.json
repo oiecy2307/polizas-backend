@@ -67,7 +67,6 @@
   "author": "Pedro Medina",
   "license": "MIT",
   "dependencies": {
-    "@google-cloud/datastore": "^2.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.13.3",
     "compression": "^1.5.2",

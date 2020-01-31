@@ -1,4 +1,5 @@
 import express from 'express';
+import { returnError, returnData, getOffset } from './utils';
 
 export default (sequelize, User) => {
   const router = express.Router();
@@ -7,13 +8,12 @@ export default (sequelize, User) => {
     .route('/')
     .get(async (req, res) => {
       try {
-        const users = await User.findAndCountAll();
-        res.status(200).json({
-          data: users,
-          error: false,
-        });
+        const offset = getOffset(req);
+        const filter = { limit: 10, offset };
+        const users = await User.findAndCountAll(filter);
+        returnData(res, users);
       } catch (e) {
-        res.status(500).send(e);
+        returnError(res, 500, e);
       }
     });
 
@@ -22,12 +22,9 @@ export default (sequelize, User) => {
     .get(async (req, res) => {
       try {
         const users = await User.findAndCountAll();
-        res.status(200).json({
-          data: users,
-          error: false,
-        });
+        returnData(res, users);
       } catch (e) {
-        res.status(500).send(e);
+        returnError(res, 500, e);
       }
     });
 
@@ -38,9 +35,9 @@ export default (sequelize, User) => {
         const { id } = req.params;
         const user = await User.findByPk(id);
         delete user.password;
-        res.status(200).json({ user });
+        returnData(res, user);
       } catch (e) {
-        res.status(500).send(e);
+        returnError(res, 500, e);
       }
     });
 
@@ -57,9 +54,9 @@ export default (sequelize, User) => {
 				}
         delete user.password;
         await user.save();
-        res.status(200).json({ user });
+        returnData(res, user)
       } catch (e) {
-        res.status(500).send(e);
+        returnError(res, 500, e);
       }
     });
 
