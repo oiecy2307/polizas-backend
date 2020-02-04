@@ -52,26 +52,30 @@ export default (sequelize, User) => {
     .route('/login')
     .post(async ({ body }, res) => {
       try {
-        const { email, username, password } = body;
-        if ((!email && !username) || !password) {
+        const { username, password } = body;
+        if (!username || !password) {
           res.status(412).json({ error: true, message: 'Datos incompletos' });
           return;
         }
-        const user = await User
+        let user = await User
           .findOne({
             where: {
               [Op.or]: [
-                { email: email || '' },
+                { email: username || '' },
                 { username: username || '' },
               ],
             },
           });
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!user || !isPasswordValid) {
+        if (!user) {
           res.status(404).json({ error: true, message: 'El usuario o contraseña son incorrectos' });
           return;
         }
-        delete user.password;
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+          res.status(404).json({ error: true, message: 'El usuario o contraseña son incorrectos' });
+          return;
+        }
+        user.password = null;
         // TODO: CHANGE SECRET FOR: process.env.APP_SECRET
         const token = await jwt.sign({ userId: user.id, role: user.role }, 'temporal-pedro');
         res

@@ -1,0 +1,22 @@
+The next are changes to do in some period:
+
+TO DO:
+- Create "fullname" attribute for users.
+- Paginador
+- read about boilerplate features (is on github page)
+- Create components for CRUD (dialog, table)
+- min-width de table para visualizar info correcta
+- implementar dropdown en usuarios
+- Editar usuario
+- Validaciones de reptido (username, email)
+
+DONE:
+- loader
+- error handler
+- Sesion frontend
+- change actions name with prefix (frontend)
+- button disabled
+- multilanguage (both: back and frontend)
+- log out
+- theme (color)
+- empty state

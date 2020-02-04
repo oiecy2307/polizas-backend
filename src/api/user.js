@@ -60,5 +60,31 @@ export default (sequelize, User) => {
       }
     });
 
+  router
+    .route('/type/:type')
+    .get(async (req, res) => {
+      try {
+        const { type } = req.params;
+        const offset = getOffset(req);
+        if (!type) {
+          returnError(res, 412, 'User type needed');
+          return;
+        }
+        const filter = {
+          attributes: ['id', 'email', 'username', 'createdAt', 'name', 'lastname', 'secondLastName'],
+          limit: 10,
+          offset,
+          where: {
+            role: type,
+          },
+        };
+        const users = await User.findAndCountAll(filter);
+        returnData(res, users);
+      } catch (e) {
+        console.error(e);
+        returnError(res, 500, e);
+      }
+    });
+
   return router;
 };

@@ -17,7 +17,7 @@ export default ({ db }) => {
 	// db.sync({ force: true });
 
 	// MIDDLEWARES
-	// api.all('/users*', adminPermission)
+	api.all('/users*', adminPermission)
 
 	// METHODS
 	api.use('/users', userMethods(db, userModel));
