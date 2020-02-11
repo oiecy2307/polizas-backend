@@ -6,9 +6,12 @@ TO DO:
 - read about boilerplate features (is on github page)
 - Create components for CRUD (dialog, table)
 - min-width de table para visualizar info correcta
-- implementar dropdown en usuarios
 - Editar usuario
 - Validaciones de reptido (username, email)
+- Messages de tickets
+- Mensajes de error aún están estáticos
+- Dropdown options están estáticas español
+- Max lengths en inputs
 
 DONE:
 - loader
@@ -20,3 +23,4 @@ DONE:
 - log out
 - theme (color)
 - empty state
+- implementar dropdown en usuarios
