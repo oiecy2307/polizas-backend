@@ -10,7 +10,7 @@ export default (sequelize, User) => {
       try {
         const offset = getOffset(req);
         const filter = { limit: 10, offset };
-        const users = await User.findAndCountAll(filter);
+        const users = await User.findAll({filter});
         returnData(res, users);
       } catch (e) {
         returnError(res, 500, e);
@@ -60,31 +60,63 @@ export default (sequelize, User) => {
       }
     });
 
-  router
-    .route('/type/:type')
-    .get(async (req, res) => {
+
+    router
+    .route('/')
+    .post(async (req, res) => {
       try {
-        const { type } = req.params;
-        const offset = getOffset(req);
-        if (!type) {
-          returnError(res, 412, 'User type needed');
+        const {
+          nombre,
+          apellidoPaterno,
+          apellidoMaterno,
+          password,
+          email,
+          username,
+          role,
+
+        } = req.body;
+        if (!(
+          nombre &&
+          apellidoPaterno &&
+          apellidoMaterno &&
+          password &&
+          email &&
+          username &&
+          role
+        )) {
+          returnError(res, 412, 'Information not completed');
           return;
         }
-        const filter = {
-          attributes: ['id', 'email', 'username', 'createdAt', 'name', 'lastname', 'secondLastName'],
-          limit: 10,
-          offset,
-          where: {
-            role: type,
-          },
-        };
-        const users = await User.findAndCountAll(filter);
-        returnData(res, users);
+        const newUser = await User
+          .build({
+            nombre,
+          apellidoPaterno,
+          apellidoMaterno,
+          password,
+          email,
+          username,
+          role,
+          })
+          .save();
+        returnData(res, newUser);
       } catch (e) {
-        console.error(e);
         returnError(res, 500, e);
       }
     });
+
+    router
+    .route('/:id')
+    .delete(async (req, res) => {
+      try {
+        const { id } = req.params;
+        const usuario = await User.findByPk(id, { include: [{ all: true }]});
+        await usuario.destroy();
+        returnData(res);
+      } catch (e) {
+        returnError(res, 500, e);
+      }
+    });
+
 
   return router;
 };

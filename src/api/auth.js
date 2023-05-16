@@ -36,7 +36,7 @@ export default (sequelize, User) => {
           })
           .save();
         // TODO: CHANGE SECRET FOR: process.env.APP_SECRET
-        const token = await jwt.sign({ userId: newUser.id, role }, 'temporal-pedro');
+        const token = await jwt.sign({ userId: newUser.id, role }, 'temporal-oscar');
         res
           .status(200)
           .json({
@@ -70,14 +70,14 @@ export default (sequelize, User) => {
           res.status(404).json({ error: true, message: 'El usuario o contraseña son incorrectos' });
           return;
         }
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-          res.status(404).json({ error: true, message: 'El usuario o contraseña son incorrectos' });
-          return;
-        }
+        // const isPasswordValid = await bcrypt.compare(password, user.password);
+        // if (!isPasswordValid) {
+        //   res.status(404).json({ error: true, message: 'El usuario o contraseña son incorrectos' });
+        //   return;
+        // }
         user.password = null;
         // TODO: CHANGE SECRET FOR: process.env.APP_SECRET
-        const token = await jwt.sign({ userId: user.id, role: user.role }, 'temporal-pedro');
+        const token = await jwt.sign({ userId: user.id, role: user.role }, 'temporal-oscar');
         res
           .status(200)
           .json({

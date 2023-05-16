@@ -1,20 +1,22 @@
 import user from './user';
-import ticket from './ticket';
+import poliza from './poliza';
+import inventario from './inventario';
 
 export default (sequelize) => {
   const userModel = user(sequelize);
-  const ticketModel = ticket(sequelize);
+  const polizaModel = poliza(sequelize);
+  const inventarioModel = inventario(sequelize);
 
-  userModel.hasMany(ticketModel);
-  ticketModel.belongsTo(userModel, {
-    foreignKey: 'reporterId',
-  });
-  ticketModel.belongsTo(userModel, {
-    foreignKey: 'technicalId',
-  });
+
+  polizaModel.belongsTo(userModel);
+  polizaModel.belongsTo(inventarioModel);
+  //inventarioModel.hasOne(polizaModel);
+  sequelize.sync();
+
 
   return {
     userModel,
-    ticketModel,
+    polizaModel,
+    inventarioModel,
   };
 }

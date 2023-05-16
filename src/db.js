@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 
 export default (callback) => {
-	const sequelize = new Sequelize('suppdesk', 'pedro', 'm0r0cha95', {
-		host: '23.229.209.227',
+	const sequelize = new Sequelize('prueba-proyecto', 'pruebas', 'Pruebas1234.', {
+		host: '35.184.48.157',
 		dialect: 'mysql',
 		operatorsAliases: false,
 		port: 3306,

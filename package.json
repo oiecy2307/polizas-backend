@@ -64,7 +64,7 @@
       ]
     }
   },
-  "author": "Pedro Medina",
+  "author": "Oscar Sandoval",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",

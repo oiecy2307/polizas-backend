@@ -23,20 +23,20 @@ export default (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    name: {
+    nombre: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastname: {
+    apellidoPaterno: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    secondLastName: {
+    apellidoMaterno: {
       type: DataTypes.STRING,
       defaultValue: '',
     },
     role: {
-      type: DataTypes.ENUM('admin', 'technical', 'salesman'),
+      type: DataTypes.ENUM('admin', 'vendedor'),
       allowNull: false,
     },
   }, {});
